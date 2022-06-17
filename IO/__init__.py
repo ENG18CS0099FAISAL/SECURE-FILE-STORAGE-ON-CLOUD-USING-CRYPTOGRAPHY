@@ -1,3 +1,6 @@
+#
+#  SelfTest/IO/__init__.py: Self-test for input/output module
+#
 # ===================================================================
 #
 # Copyright (c) 2014, Legrandin <helderijs@gmail.com>
@@ -28,4 +31,17 @@
 # POSSIBILITY OF SUCH DAMAGE.
 # ===================================================================
 
-__all__ = ['PEM', 'PKCS8']
+"""Self-test for I/O"""
+
+def get_tests(config={}):
+    tests = []
+    from Crypto.SelfTest.IO import test_PKCS8;     tests += test_PKCS8.get_tests(config=config)
+    from Crypto.SelfTest.IO import test_PBES;      tests += test_PBES.get_tests(config=config)
+    return tests
+
+if __name__ == '__main__':
+    import unittest
+    suite = lambda: unittest.TestSuite(get_tests())
+    unittest.main(defaultTest='suite')
+
+
