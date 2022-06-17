@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-#  SelfTest/PublicKey/__init__.py: Self-test for public key crypto
+#  SelfTest/st_common.py: Common functions for SelfTest modules
 #
 # Written in 2008 by Dwayne C. Litzenberger <dlitz@dlitz.net>
 #
@@ -22,33 +22,34 @@
 # SOFTWARE.
 # ===================================================================
 
-"""Self-test for public-key crypto"""
+"""Common functions for SelfTest modules"""
 
-__revision__ = "$Id$"
+import unittest
+import binascii
+from Crypto.Util.py3compat import b
 
-import os
 
-def get_tests(config={}):
-    tests = []
-    from Crypto.SelfTest.PublicKey import test_DSA;       tests += test_DSA.get_tests(config=config)
-    from Crypto.SelfTest.PublicKey import test_RSA;       tests += test_RSA.get_tests(config=config)
-    from Crypto.SelfTest.PublicKey import test_ECC;       tests += test_ECC.get_tests(config=config)
+def list_test_cases(class_):
+    """Return a list of TestCase instances given a TestCase class
 
-    from Crypto.SelfTest.PublicKey import test_import_DSA
-    tests +=test_import_DSA.get_tests(config=config)
+    This is useful when you have defined test* methods on your TestCase class.
+    """
+    return unittest.TestLoader().loadTestsFromTestCase(class_)
 
-    from Crypto.SelfTest.PublicKey import test_import_RSA
-    tests += test_import_RSA.get_tests(config=config)
+def strip_whitespace(s):
+    """Remove whitespace from a text or byte string"""
+    if isinstance(s,str):
+        return b("".join(s.split()))
+    else:
+        return b("").join(s.split())
 
-    from Crypto.SelfTest.PublicKey import test_import_ECC
-    tests += test_import_ECC.get_tests(config=config)
+def a2b_hex(s):
+    """Convert hexadecimal to binary, ignoring whitespace"""
+    return binascii.a2b_hex(strip_whitespace(s))
 
-    from Crypto.SelfTest.PublicKey import test_ElGamal;   tests += test_ElGamal.get_tests(config=config)
-    return tests
-
-if __name__ == '__main__':
-    import unittest
-    suite = lambda: unittest.TestSuite(get_tests())
-    unittest.main(defaultTest='suite')
+def b2a_hex(s):
+    """Convert binary to hexadecimal"""
+    # For completeness
+    return binascii.b2a_hex(s)
 
 # vim:set ts=4 sw=4 sts=4 expandtab:

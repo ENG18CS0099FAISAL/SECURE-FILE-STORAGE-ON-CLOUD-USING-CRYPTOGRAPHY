@@ -1,8 +1,6 @@
-# -*- coding: utf-8 -*-
+#! /usr/bin/env python
 #
-#  SelfTest/Protocol/__init__.py: Self-tests for Crypto.Protocol
-#
-# Written in 2008 by Dwayne C. Litzenberger <dlitz@dlitz.net>
+#  __main__.py : Stand-along loader for PyCryptodome test suite
 #
 # ===================================================================
 # The contents of this file are dedicated to the public domain.  To
@@ -22,23 +20,19 @@
 # SOFTWARE.
 # ===================================================================
 
-"""Self-test for Crypto.Protocol"""
+from __future__ import print_function
 
-__revision__ = "$Id$"
+import sys
 
-def get_tests(config={}):
-    tests = []
-    from Crypto.SelfTest.Protocol import test_rfc1751;        tests += test_rfc1751.get_tests(config=config)
-    from Crypto.SelfTest.Protocol import test_KDF;        tests += test_KDF.get_tests(config=config)
+from Crypto import SelfTest
 
-    from Crypto.SelfTest.Protocol import test_SecretSharing;
-    tests += test_SecretSharing.get_tests(config=config)
+slow_tests = not "--skip-slow-tests" in sys.argv
+if not slow_tests:
+    print("Skipping slow tests")
 
-    return tests
+wycheproof_warnings = "--wycheproof-warnings" in sys.argv
+if wycheproof_warnings:
+    print("Printing Wycheproof warnings")
 
-if __name__ == '__main__':
-    import unittest
-    suite = lambda: unittest.TestSuite(get_tests())
-    unittest.main(defaultTest='suite')
-
-# vim:set ts=4 sw=4 sts=4 expandtab:
+config = {'slow_tests' : slow_tests, 'wycheproof_warnings' : wycheproof_warnings }
+SelfTest.run(stream=sys.stdout, verbosity=1, config=config)

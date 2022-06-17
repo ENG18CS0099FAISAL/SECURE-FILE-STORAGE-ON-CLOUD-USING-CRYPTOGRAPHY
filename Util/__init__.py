@@ -1,9 +1,5 @@
 # -*- coding: utf-8 -*-
 #
-#  SelfTest/Protocol/__init__.py: Self-tests for Crypto.Protocol
-#
-# Written in 2008 by Dwayne C. Litzenberger <dlitz@dlitz.net>
-#
 # ===================================================================
 # The contents of this file are dedicated to the public domain.  To
 # the extent that dedication to the public domain is not available,
@@ -22,23 +18,24 @@
 # SOFTWARE.
 # ===================================================================
 
-"""Self-test for Crypto.Protocol"""
+"""Miscellaneous modules
 
-__revision__ = "$Id$"
+Contains useful modules that don't belong into any of the
+other Crypto.* subpackages.
 
-def get_tests(config={}):
-    tests = []
-    from Crypto.SelfTest.Protocol import test_rfc1751;        tests += test_rfc1751.get_tests(config=config)
-    from Crypto.SelfTest.Protocol import test_KDF;        tests += test_KDF.get_tests(config=config)
+========================    =============================================
+Module                      Description
+========================    =============================================
+`Crypto.Util.number`        Number-theoretic functions (primality testing, etc.)
+`Crypto.Util.Counter`       Fast counter functions for CTR cipher modes.
+`Crypto.Util.RFC1751`       Converts between 128-bit keys and human-readable
+                            strings of words.
+`Crypto.Util.asn1`          Minimal support for ASN.1 DER encoding
+`Crypto.Util.Padding`       Set of functions for adding and removing padding.
+========================    =============================================
 
-    from Crypto.SelfTest.Protocol import test_SecretSharing;
-    tests += test_SecretSharing.get_tests(config=config)
+:undocumented: _galois, _number_new, cpuid, py3compat, _raw_api
+"""
 
-    return tests
+__all__ = ['RFC1751', 'number', 'strxor', 'asn1', 'Counter', 'Padding']
 
-if __name__ == '__main__':
-    import unittest
-    suite = lambda: unittest.TestSuite(get_tests())
-    unittest.main(defaultTest='suite')
-
-# vim:set ts=4 sw=4 sts=4 expandtab:

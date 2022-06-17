@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 #
-#  SelfTest/PublicKey/__init__.py: Self-test for public key crypto
+#  SelfTest/Util/test_Counter: Self-test for the Crypto.Util.Counter module
 #
-# Written in 2008 by Dwayne C. Litzenberger <dlitz@dlitz.net>
+# Written in 2009 by Dwayne C. Litzenberger <dlitz@dlitz.net>
 #
 # ===================================================================
 # The contents of this file are dedicated to the public domain.  To
@@ -22,32 +22,45 @@
 # SOFTWARE.
 # ===================================================================
 
-"""Self-test for public-key crypto"""
+"""Self-tests for Crypto.Util.Counter"""
 
-__revision__ = "$Id$"
+from Crypto.Util.py3compat import *
 
-import os
+import unittest
+
+class CounterTests(unittest.TestCase):
+    def setUp(self):
+        global Counter
+        from Crypto.Util import Counter
+
+    def test_BE(self):
+        """Big endian"""
+        c = Counter.new(128)
+        c = Counter.new(128, little_endian=False)
+
+    def test_LE(self):
+        """Little endian"""
+        c = Counter.new(128, little_endian=True)
+
+    def test_nbits(self):
+        c = Counter.new(nbits=128)
+        self.assertRaises(ValueError, Counter.new, 129)
+
+    def test_prefix(self):
+        c = Counter.new(128, prefix=b("xx"))
+
+    def test_suffix(self):
+        c = Counter.new(128, suffix=b("xx"))
+
+    def test_iv(self):
+        c = Counter.new(128, initial_value=2)
+        self.assertRaises(ValueError, Counter.new, 16, initial_value=0x1FFFF)
 
 def get_tests(config={}):
-    tests = []
-    from Crypto.SelfTest.PublicKey import test_DSA;       tests += test_DSA.get_tests(config=config)
-    from Crypto.SelfTest.PublicKey import test_RSA;       tests += test_RSA.get_tests(config=config)
-    from Crypto.SelfTest.PublicKey import test_ECC;       tests += test_ECC.get_tests(config=config)
-
-    from Crypto.SelfTest.PublicKey import test_import_DSA
-    tests +=test_import_DSA.get_tests(config=config)
-
-    from Crypto.SelfTest.PublicKey import test_import_RSA
-    tests += test_import_RSA.get_tests(config=config)
-
-    from Crypto.SelfTest.PublicKey import test_import_ECC
-    tests += test_import_ECC.get_tests(config=config)
-
-    from Crypto.SelfTest.PublicKey import test_ElGamal;   tests += test_ElGamal.get_tests(config=config)
-    return tests
+    from Crypto.SelfTest.st_common import list_test_cases
+    return list_test_cases(CounterTests)
 
 if __name__ == '__main__':
-    import unittest
     suite = lambda: unittest.TestSuite(get_tests())
     unittest.main(defaultTest='suite')
 
