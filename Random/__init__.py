@@ -1,8 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-#  SelfTest/Random/__init__.py: Self-test for random number generation modules
-#
-# Written in 2008 by Dwayne C. Litzenberger <dlitz@dlitz.net>
+#  Random/__init__.py : PyCrypto random number generation
 #
 # ===================================================================
 # The contents of this file are dedicated to the public domain.  To
@@ -22,18 +20,38 @@
 # SOFTWARE.
 # ===================================================================
 
-"""Self-test for random number generators"""
+__all__ = ['new', 'get_random_bytes']
 
-__revision__ = "$Id$"
+from os import urandom
 
-def get_tests(config={}):
-    tests = []
-    from Crypto.SelfTest.Random import test_random;         tests += test_random.get_tests(config=config)
-    return tests
+class _UrandomRNG(object):
 
-if __name__ == '__main__':
-    import unittest
-    suite = lambda: unittest.TestSuite(get_tests())
-    unittest.main(defaultTest='suite')
+    def read(self, n):
+        """Return a random byte string of the desired size."""
+        return urandom(n)
 
-# vim:set ts=4 sw=4 sts=4 expandtab:
+    def flush(self):
+        """Method provided for backward compatibility only."""
+        pass
+
+    def reinit(self):
+        """Method provided for backward compatibility only."""
+        pass
+
+    def close(self):
+        """Method provided for backward compatibility only."""
+        pass
+        
+
+def new(*args, **kwargs):
+    """Return a file-like object that outputs cryptographically random bytes."""
+    return _UrandomRNG()
+
+
+def atfork():
+    pass
+
+
+#: Function that returns a random byte string of the desired size.
+get_random_bytes = urandom
+
