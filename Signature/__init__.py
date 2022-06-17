@@ -1,39 +1,36 @@
-# -*- coding: utf-8 -*-
-#
-#  SelfTest/Signature/__init__.py: Self-test for signature modules
-#
 # ===================================================================
-# The contents of this file are dedicated to the public domain.  To
-# the extent that dedication to the public domain is not available,
-# everyone is granted a worldwide, perpetual, royalty-free,
-# non-exclusive license to exercise all rights associated with the
-# contents of this file for any purpose whatsoever.
-# No rights are reserved.
 #
-# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-# EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-# MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-# NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS
-# BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN
-# ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
-# CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-# SOFTWARE.
+# Copyright (c) 2014, Legrandin <helderijs@gmail.com>
+# All rights reserved.
+#
+# Redistribution and use in source and binary forms, with or without
+# modification, are permitted provided that the following conditions
+# are met:
+#
+# 1. Redistributions of source code must retain the above copyright
+#    notice, this list of conditions and the following disclaimer.
+# 2. Redistributions in binary form must reproduce the above copyright
+#    notice, this list of conditions and the following disclaimer in
+#    the documentation and/or other materials provided with the
+#    distribution.
+#
+# THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+# "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+# LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
+# FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE
+# COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+# INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
+# BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+# LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+# CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+# LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
+# ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+# POSSIBILITY OF SUCH DAMAGE.
 # ===================================================================
 
-"""Self-test for signature modules"""
+"""Digital signature protocols
 
-import os
+A collection of standardized protocols to carry out digital signatures.
+"""
 
-def get_tests(config={}):
-    tests = []
-    from . import test_pkcs1_15; tests += test_pkcs1_15.get_tests(config=config)
-    from . import test_pss; tests += test_pss.get_tests(config=config)
-    from . import test_dss; tests += test_dss.get_tests(config=config)
-    return tests
-
-if __name__ == '__main__':
-    import unittest
-    suite = lambda: unittest.TestSuite(get_tests())
-    unittest.main(defaultTest='suite')
-
-# vim:set ts=4 sw=4 sts=4 expandtab:
+__all__ = ['PKCS1_v1_5', 'PKCS1_PSS', 'DSS', 'pkcs1_15', 'pss']

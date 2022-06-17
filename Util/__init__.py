@@ -1,9 +1,5 @@
 # -*- coding: utf-8 -*-
 #
-#  SelfTest/Util/__init__.py: Self-test for utility modules
-#
-# Written in 2008 by Dwayne C. Litzenberger <dlitz@dlitz.net>
-#
 # ===================================================================
 # The contents of this file are dedicated to the public domain.  To
 # the extent that dedication to the public domain is not available,
@@ -22,25 +18,24 @@
 # SOFTWARE.
 # ===================================================================
 
-"""Self-test for utility modules"""
+"""Miscellaneous modules
 
-__revision__ = "$Id$"
+Contains useful modules that don't belong into any of the
+other Crypto.* subpackages.
 
-import os
+========================    =============================================
+Module                      Description
+========================    =============================================
+`Crypto.Util.number`        Number-theoretic functions (primality testing, etc.)
+`Crypto.Util.Counter`       Fast counter functions for CTR cipher modes.
+`Crypto.Util.RFC1751`       Converts between 128-bit keys and human-readable
+                            strings of words.
+`Crypto.Util.asn1`          Minimal support for ASN.1 DER encoding
+`Crypto.Util.Padding`       Set of functions for adding and removing padding.
+========================    =============================================
 
-def get_tests(config={}):
-    tests = []
-    from Crypto.SelfTest.Util import test_number; tests += test_number.get_tests(config=config)
-    from Crypto.SelfTest.Util import test_Counter; tests += test_Counter.get_tests(config=config)
-    from Crypto.SelfTest.Util import test_Padding; tests += test_Padding.get_tests(config=config)
-    from Crypto.SelfTest.Util import test_strxor; tests += test_strxor.get_tests(config=config)
-    from Crypto.SelfTest.Util import test_asn1; tests += test_asn1.get_tests(config=config)
-    from Crypto.SelfTest.Util import test_rfc1751; tests += test_rfc1751.get_tests(config=config)
-    return tests
+:undocumented: _galois, _number_new, cpuid, py3compat, _raw_api
+"""
 
-if __name__ == '__main__':
-    import unittest
-    suite = lambda: unittest.TestSuite(get_tests())
-    unittest.main(defaultTest='suite')
+__all__ = ['RFC1751', 'number', 'strxor', 'asn1', 'Counter', 'Padding']
 
-# vim:set ts=4 sw=4 sts=4 expandtab:
