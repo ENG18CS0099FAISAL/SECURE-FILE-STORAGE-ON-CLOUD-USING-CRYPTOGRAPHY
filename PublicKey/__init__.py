@@ -1,9 +1,5 @@
 # -*- coding: utf-8 -*-
 #
-#  SelfTest/PublicKey/__init__.py: Self-test for public key crypto
-#
-# Written in 2008 by Dwayne C. Litzenberger <dlitz@dlitz.net>
-#
 # ===================================================================
 # The contents of this file are dedicated to the public domain.  To
 # the extent that dedication to the public domain is not available,
@@ -22,33 +18,78 @@
 # SOFTWARE.
 # ===================================================================
 
-"""Self-test for public-key crypto"""
+from Crypto.Util.asn1 import (DerSequence, DerInteger, DerBitString,
+                             DerObjectId, DerNull)
 
-__revision__ = "$Id$"
 
-import os
+def _expand_subject_public_key_info(encoded):
+    """Parse a SubjectPublicKeyInfo structure.
 
-def get_tests(config={}):
-    tests = []
-    from Crypto.SelfTest.PublicKey import test_DSA;       tests += test_DSA.get_tests(config=config)
-    from Crypto.SelfTest.PublicKey import test_RSA;       tests += test_RSA.get_tests(config=config)
-    from Crypto.SelfTest.PublicKey import test_ECC;       tests += test_ECC.get_tests(config=config)
+    It returns a triple with:
+        * OID (string)
+        * encoded public key (bytes)
+        * Algorithm parameters (bytes or None)
+    """
 
-    from Crypto.SelfTest.PublicKey import test_import_DSA
-    tests +=test_import_DSA.get_tests(config=config)
+    #
+    # SubjectPublicKeyInfo  ::=  SEQUENCE  {
+    #   algorithm         AlgorithmIdentifier,
+    #   subjectPublicKey  BIT STRING
+    # }
+    #
+    # AlgorithmIdentifier  ::=  SEQUENCE  {
+    #   algorithm   OBJECT IDENTIFIER,
+    #   parameters  ANY DEFINED BY algorithm OPTIONAL
+    # }
+    #
 
-    from Crypto.SelfTest.PublicKey import test_import_RSA
-    tests += test_import_RSA.get_tests(config=config)
+    spki = DerSequence().decode(encoded, nr_elements=2)
+    algo = DerSequence().decode(spki[0], nr_elements=(1,2))
+    algo_oid = DerObjectId().decode(algo[0])
+    spk = DerBitString().decode(spki[1]).value
 
-    from Crypto.SelfTest.PublicKey import test_import_ECC
-    tests += test_import_ECC.get_tests(config=config)
+    if len(algo) == 1:
+        algo_params = None
+    else:
+        try:
+            DerNull().decode(algo[1])
+            algo_params = None
+        except:
+            algo_params = algo[1]
 
-    from Crypto.SelfTest.PublicKey import test_ElGamal;   tests += test_ElGamal.get_tests(config=config)
-    return tests
+    return algo_oid.value, spk, algo_params
 
-if __name__ == '__main__':
-    import unittest
-    suite = lambda: unittest.TestSuite(get_tests())
-    unittest.main(defaultTest='suite')
 
-# vim:set ts=4 sw=4 sts=4 expandtab:
+def _create_subject_public_key_info(algo_oid, secret_key, params=None):
+
+    if params is None:
+        params = DerNull()
+
+    spki = DerSequence([
+                DerSequence([
+                    DerObjectId(algo_oid),
+                    params]),
+                DerBitString(secret_key)
+                ])
+    return spki.encode()
+
+
+def _extract_subject_public_key_info(x509_certificate):
+    """Extract subjectPublicKeyInfo from a DER X.509 certificate."""
+
+    certificate = DerSequence().decode(x509_certificate, nr_elements=3)
+    tbs_certificate = DerSequence().decode(certificate[0],
+                                           nr_elements=range(6, 11))
+
+    index = 5
+    try:
+        tbs_certificate[0] + 1
+        # Version not present
+        version = 1
+    except TypeError:
+        version = DerInteger(explicit=0).decode(tbs_certificate[0]).value
+        if version not in (2, 3):
+            raise ValueError("Incorrect X.509 certificate version")
+        index = 6
+
+    return tbs_certificate[index]
