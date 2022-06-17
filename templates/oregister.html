@@ -1,0 +1,57 @@
+{% include "head.html" %}
+<head>
+<style>
+body {
+ background-image: url("https://www.teahub.io/photos/full/301-3011966_colorfulness.jpg");
+  background-repeat:no-repeat ; /* Do not repeat the image */
+  background-size: cover;
+}
+</style>
+</head>
+<div class="container-fluid">
+  <div class="row">
+        <div class="col-md-4">
+        </div>
+    <div class="col-md-5">
+    <div class="card" style="padding:45px">
+     <h5 class="text-center">Owner Register Here!</h5>
+
+  <form action="/oregister1"   onsubmit="return validate()" name="myform" enctype="multipart/form-data" method="post">
+    <div class="form-group">
+      <label for="name">Name:</label>
+      <input type="text" class="form-control" id="name" placeholder="Enter name" name="name" required>
+    </div>
+    <div class="form-group">
+      <label for="username">Username:</label>
+      <input type="text" class="form-control" id="username" placeholder="Enter username" name="username"  required>
+    </div>
+    <div class="form-group">
+      <label for="password">Password:</label>
+      <input type="password" class="form-control" id="password" placeholder="Enter password" name="password"   required>
+    </div>
+     <div class="form-group">
+      <label for="email">Email:</label>
+      <input type="email" class="form-control" id="email" placeholder="Enter email" name="email" required>
+    </div>
+    <div class="form-group">
+      <label for="phone">Phone:</label>
+      <input type="number" class="form-control" id="phone"  placeholder="Enter phonenumber" name="phone" required>
+    </div>
+
+
+       <div class="form-group">
+      <label >Image:</label>
+      <input type="file" class="form-control"   name="file">
+    </div>
+    <div>
+      <button type="submit" class="btn btn-primary" value="Register">Register</button>
+
+    <button type="reset" class="btn btn-dark" value="Clear">Clear</button>
+    </div>
+  </form>
+</div>
+</div>
+        <div class="col-md-3" >
+        </div>
+  </div>
+</div>
